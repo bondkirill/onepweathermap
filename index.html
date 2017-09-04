@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>Current Weather Information</title>
+    <!-- Latest compiled JavaScript -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ <script>
+		var openWeatherAppId = 'd98ac33770d9063a6e18acd3d86e8c0a', //myAPIkey
+		  openWeatherUrl = 'http://api.openweathermap.org/data/2.5/forecast/daily' //url to 16 day / daily forecast
+		var prepareData = function(units) {
+			// Replace loading image
+			var cityName = $('#city-name').val()  //get input text Your City Name
+            var cnt = $('#cnt-num').val()           //get cnt days input number Select the days
+			// Make ajax call, callback
+			if (cityName && cityName != ''){             //check for input text not empty
+				cityName = cityName.trim()
+				getData(openWeatherUrl, cityName, openWeatherAppId, units, cnt)
+			}
+			else {
+				alert('Please enter the city name')
+			}
+		}
+		$(document).ready(function(){             // Receives parameters celsius
+			$('.btn-metric').click(function() {
+				prepareData('metric')
+			})
+			$('.btn-imperial').click(function() {  //Receives parameters Farengeiht
+				prepareData('imperial')
+			})
+		})
+		function getData (url, cityName, appId, units, cnt) {   
+			var request = $.ajax({                                               //ajax coonection to API openweather.
+				url: url,
+				dataType: "jsonp",
+				data: {q: cityName, appid: appId, units: units, cnt: cnt},  
+				jsonpCallback: "fetchData",
+				type: "GET"
+			}).fail(function(error){                     //connection test with API
+				console.error(error)
+				alert('Error sending request')
+			})
+		}
+		function fetchData (forecast) {               // get parameters from API 
+			console.log(forecast)
+			var html = '',
+			  cityName = forecast.city.name,             //get City name
+				country = forecast.city.country             //get Country code (GB, JP etc.)
+			html += '<h3> Weather Forecast for ' + cityName + ', ' + country + '</h3>'
+			forecast.list.forEach(function(forecastEntry, index, list){      //get array from data - date,weather.icon,temp.day,temp.night
+				html += '<p></br>Date:' + forecastEntry.dt + '<img src=http://openweathermap.org/img/w/' +forecastEntry.weather[0].icon +'.png></br>Temp.day: ' + forecastEntry.temp.day + '</br>Temp.night: ' + forecastEntry.temp.night + '</p>'
+			})
+			$('#log').html(html)  // send data, to html
+		}
+	</script>
+</head>
+<body>
+<div class="jumbotron" style="margin-bottom:0px; color:orange; background-color:black;">
+	<h2 class="text-center" style="front-size:50px; front-weight:600;">Weather forecast</h2>
+</div>
+<div class="container" id="rowDiv" >
+	<div class="row" style="margin-bottom:10px;">
+		<h3 class="text-center" style="color:#FF8C00; padding-left: 400px;">The weather in your city</h3>
+        <span id="error" style="width: 400px;"></span>
+		</div>
+    </div>
+	<div class="row form-group form-inline" style="padding-left: 600px;" >
+		<input type="text" name="city" id="city-name" class="form-control" placeholder="Your City Name">
+      <lable style="margin-left: 50px;">days:</lable> <input  class="span4" type="number" placeholder="Select the days" id="cnt-num" value=""/>
+
+  
+        
+							
+		<div class="Uni">
+			<div class="span6 offset1" style="margin-left: 20px;">
+                <input type="button" class="btn-primary btn btn-metric" value="Celsius C&deg"/>
+                <input type="button" class="btn-danger btn btn-imperial" value="Farengeiht F&deg"/>
+			</div>			
+		</div>
+        </div>
+
+        
+        <div id="log" style="padding-left: 300px; height: 100%;"  >Nothing to show yet</div>
+
+     
+    
+</body>
+</html>
