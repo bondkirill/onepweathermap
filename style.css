@@ -1,0 +1,36 @@
+#rowDiv{
+	margin: auto;
+	text-align: center;
+	width: 25%;
+	padding-top: 20px;
+}
+input[type="text"]{
+	height: 40px;
+	font-size: 20px;
+}
+#submitWeather{
+	height: 40px;
+	font-size: 20px;
+	font-weight: bold;
+}
+#show{
+    margin: auto;
+    text-align: center;
+}
+
+.footer{
+    width: 100%;
+    background-color: black;
+    height: 80px;
+    text-align: center;
+   
+}
+
+#daysDiv{
+	margin-top:10px;
+	margin-left:5px;
+}
+#tempDiv{
+	margin-top:10px;
+	margin-left:15px;
+}
